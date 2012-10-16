@@ -2,7 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QVector>
+#include <QStack>
+#include <QList>
+
+struct planCell {
+    int plan;
+    bool isVisited;
+};
 
 namespace Ui {
 class MainWindow;
@@ -25,14 +31,18 @@ private slots:
     void on_startButton_clicked();
 
 private:
+    QStack<int> rowIndexStack;
+    QStack<int> colIndexStack;
     Ui::MainWindow *ui;
-    int* a;
-    int* b;
-    int* c;
-    int* x;
-    int* u;
-    int* v;
+    QList<int> a;
+    QList<int> b;
+    QList<QList<int> > c;
+    QList<QList<planCell> > x;
+    QList<int> u;
+    QList<int> v;
+    QList<int> minusR, minusC, plusR, plusC;
     int row, column;
+    int brow, bcolumn;
     QStandardItemModel *modelU;
     QStandardItemModel *modelV;
     void fillProviders();
@@ -43,6 +53,12 @@ private:
     void printPlan();
     void findUV();
     void printUV();
+    bool planIsGood();
+    void findBadCell();
+    void findCycle();
+    bool findInRow(int r);
+    bool findInCol(int c);
+    void findMinAndBuildNewPlan();
 };
 
 #endif // MAINWINDOW_H

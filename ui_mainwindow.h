@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 4. Oct 23:16:57 2012
+** Created: Fri 5. Oct 19:44:05 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -42,7 +42,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(603, 440);
+        MainWindow->resize(480, 440);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         delCustomer = new QPushButton(centralWidget);
@@ -93,14 +93,14 @@ public:
         tableCustomer->verticalHeader()->setDefaultSectionSize(40);
         tableU = new QTableView(centralWidget);
         tableU->setObjectName(QString::fromUtf8("tableU"));
-        tableU->setGeometry(QRect(350, 90, 71, 151));
+        tableU->setGeometry(QRect(420, 90, 45, 151));
         tableU->horizontalHeader()->setVisible(false);
         tableU->horizontalHeader()->setDefaultSectionSize(40);
         tableU->verticalHeader()->setVisible(false);
         tableU->verticalHeader()->setDefaultSectionSize(40);
         tableV = new QTableView(centralWidget);
         tableV->setObjectName(QString::fromUtf8("tableV"));
-        tableV->setGeometry(QRect(90, 350, 151, 71));
+        tableV->setGeometry(QRect(90, 380, 151, 45));
         tableV->horizontalHeader()->setVisible(false);
         tableV->horizontalHeader()->setDefaultSectionSize(40);
         tableV->verticalHeader()->setVisible(false);
