@@ -75,14 +75,14 @@ void MainWindow::on_startButton_clicked()
     if (isClosed())
     {
         createPlan();
-        //printPlan();
         findUV();
         printUV();
-        if (!planIsGood()) {
+        while (!planIsGood()) {
             findBadCell();
             findCycle();
             findMinAndBuildNewPlan();
-
+            findUV();
+            printUV();
         };
     };
     printPlan();
@@ -185,19 +185,21 @@ void MainWindow::findUV()
     for (int j = 0; j < column; ++j)
         v << -32000;
     u[0] = 0;
-    for (int i = 0; i < row; ++i)
-        for (int j = 0; j < column; ++j)
-            if (x[i][j].plan >= 0)
-            {
-                if (u[i] > -32000 && v[j] == -32000)
+    while (u.contains(-32000) || v.contains(-32000)) {
+        for (int i = 0; i < row; ++i)
+            for (int j = 0; j < column; ++j)
+                if (x[i][j].plan >= 0)
                 {
-                    v[j] = c.at(i).at(j) + u[i];
+                    if (u[i] > -32000 && v[j] == -32000)
+                    {
+                        v[j] = c.at(i).at(j) + u[i];
+                    };
+                    if (v[j] > -32000 && u[i] == -32000)
+                    {
+                        u[i] = v[j] - c.at(i).at(j);
+                    };
                 };
-                if (v[j] > -32000 && u[i] == -32000)
-                {
-                    u[i] = v[j] - c.at(i).at(j);
-                };
-            };
+    };
 }
 
 void MainWindow::printUV()
@@ -240,20 +242,24 @@ void MainWindow::findCycle()
 {
     rowIndexStack.push(brow);
     colIndexStack.push(bcolumn);
+
     do {
         if (!findInRow(rowIndexStack.top()) && rowIndexStack.top() != brow) {
             rowIndexStack.pop();
             colIndexStack.pop();
         };
+        if (colIndexStack.size() > 2 && colIndexStack.top() == bcolumn)
+            break;
         if (!findInCol(colIndexStack.top()) && colIndexStack.top() != bcolumn) {
-            rowIndexStack.pop();
-            colIndexStack.pop();
+                rowIndexStack.pop();
+                colIndexStack.pop();
         };
-        //qDebug() << rowIndexStack;
-        //qDebug() << colIndexStack;
-    } while (/*rowIndexStack.top() != brow && */colIndexStack.top() != bcolumn);
-    qDebug() << rowIndexStack;
-    qDebug() << colIndexStack;
+        if (colIndexStack.size() > 2 && colIndexStack.top() == bcolumn)
+            break;
+    } while (/*colIndexStack.isEmpty() || colIndexStack.top() != bcolumn*/1);
+    //TODO: WTF????
+    //rowIndexStack.push(brow);
+    //colIndexStack.push(bcolumn);
 }
 
 bool MainWindow::findInRow(int r)
@@ -282,10 +288,15 @@ bool MainWindow::findInCol(int c)
 
 void MainWindow::findMinAndBuildNewPlan()
 {
+    qDebug() << rowIndexStack;
+    qDebug() << colIndexStack;
     int min = 1000;
     int i = 0;
     while (!rowIndexStack.isEmpty())
     {
+        //plusR << rowIndexStack.pop();
+        //plusC << colIndexStack.pop();
+
         minusR << rowIndexStack.pop();
         minusC << colIndexStack.pop();
         if (x[minusR.at(i)][minusC.at(i)].plan < min)
@@ -314,4 +325,5 @@ void MainWindow::findMinAndBuildNewPlan()
     minusR.clear(); minusC.clear();
     plusR.clear(); plusC.clear();
     u.clear(); v.clear();
+    modelU->clear(); modelV->clear();
 }
